@@ -230,7 +230,7 @@
     <div class="details">
         <h4>Condiciones:</h4>
         <p><strong>Validez:</strong> 7 días</p>
-        <p><strong>Forma de Pago:</strong> 50% anticipo y 50% contra entrega</p>
+        <p><strong>Forma de Pag0:</strong> 50% anticipo y 50% contra entrega</p>
         <p><strong>Tiempo de entrega:</strong> 5 días hábiles</p>
     </div>
 
