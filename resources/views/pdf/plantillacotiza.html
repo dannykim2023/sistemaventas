@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Cotización #{{ $cotizacion->id }}</title>
+        <style>
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+
+            body {
+                font-family: DejaVu Sans, sans-serif;
+                font-size: 12px;
+                color: #333;
+                margin: 0;
+                padding: 0;
+            }
+
+            .header {
+                background: #0056d6;
+                color: #fff;
+                padding: 20px;
+            }
+
+            .header .logo {
+                width: 120px;
+                margin-bottom: 10px;
+            }
+
+            .header h1 {
+                margin: 0;
+                font-size: 20px;
+                text-transform: uppercase;
+            }
+
+            .company-info {
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .cotizacion-info {
+                text-align: right;
+                font-size: 11px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 15px;
+            }
+
+            th {
+                background: #0056d6;
+                color: #fff;
+                padding: 8px;
+                text-align: left;
+                font-size: 12px;
+            }
+
+            td {
+                padding: 8px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            td strong {
+                color: #000;
+            }
+
+            .totales {
+                margin-top: 10px;
+                width: 100%;
+                font-size: 12px;
+            }
+
+            .totales td {
+                padding: 6px;
+            }
+
+            .totales .label {
+                text-align: right;
+                font-weight: bold;
+            }
+
+            .totales .valor {
+                text-align: right;
+            }
+
+            .footer {
+                margin-top: 20px;
+                font-size: 11px;
+            }
+
+            .footer strong {
+                color: #000;
+            }
+
+            .firmas {
+                margin-top: 40px;
+                text-align: right;
+                font-size: 12px;
+            }
+
+            .firmas .nombre {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img
+                src="{{ public_path('imagenes/logoagenciadn.png') }}"
+                class="logo"
+                alt="Logo"
+            />
+            <h1>Cotización</h1>
+            <div style="display: flex; justify-content: space-between">
+                <div class="company-info">
+                    <strong>AGENCIA DN - SOFTWARE & MARKETING S.A.C.</strong
+                    ><br />
+                    RUC: 20614216493<br />
+                    Dirección: Calle Robinson 113 – Surquillo – Lima
+                </div>
+                <div class="cotizacion-info">
+                    <strong>Cotización N°:</strong> #{{ $cotizacion->id }}<br />
+                    <strong>F. Emisión:</strong> {{ $cotizacion->fecha_emision
+                    ?? '-' }}<br />
+                    <strong>F. Vencimiento:</strong> {{
+                    $cotizacion->fecha_vencimiento ?? '-' }}
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($cotizacion->items as $item)
+                    <tr>
+                        <td><strong>{{ $item->descripcion }}</strong></td>
+                        <td>{{ $item->cantidad }}</td>
+                        <td>
+                            <strong
+                                >S/ {{ number_format($item->subtotal, 2)
+                                }}</strong
+                            >
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <table class="totales">
+                <tr>
+                    <td class="label">Sub-total:</td>
+                    <td class="valor">
+                        S/ {{ number_format($cotizacion->subtotal, 2) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Descuento:</td>
+                    <td class="valor">-</td>
+                </tr>
+                <tr>
+                    <td class="label">IGV (18%):</td>
+                    <td class="valor">-</td>
+                </tr>
+                <tr>
+                    <td class="label"><strong>Total:</strong></td>
+                    <td class="valor">
+                        <strong
+                            >S/ {{ number_format($cotizacion->total, 2)
+                            }}</strong
+                        >
+                    </td>
+                </tr>
+            </table>
+
+            <div class="footer">
+                <p>
+                    <strong>Detalles adicionales:</strong><br />
+                    El proyecto inicia con un pago del 30% del total acordado.
+                    El saldo restante debe ser cancelado antes de migrar la
+                    página web al dominio principal del cliente.<br />
+                    Una vez entregado el diseño inicial, el cliente podrá
+                    solicitar cambios mínimos dentro de un plazo de 7 días
+                    hábiles después de completar el proyecto.<br />
+                    Renovación anual: S/300 (Dominio + Hosting si aplica).
+                </p>
+            </div>
+
+            <div class="firmas">
+                <div class="nombre">Lorenzo Daniel Sancho Osco</div>
+                CEO | Gerente General
+            </div>
+        </div>
+    </body>
+</html>
