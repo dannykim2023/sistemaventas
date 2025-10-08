@@ -54,7 +54,7 @@ class User extends Authenticatable implements FilamentUser
         // Durante pruebas, deja esto en true:
         return true;
 
-        // 🔒 En producción podrías hacer algo así:
+        // 🔒 En producción podrías hacer algo as:
         // return $this->email === 'admin@tudominio.com';
     }
 }
