@@ -5,12 +5,12 @@ namespace App\Filament\Resources\Cotizacions\Pages;
 use App\Filament\Resources\Cotizacions\CotizacionResource;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\Cotizacions\Widgets\CotizacionesStats;
+use Filament\Actions;
 
 class ListCotizacions extends ListRecords
 {
     protected static string $resource = CotizacionResource::class;
 
-    // filtros compartidos (opcional, si los usas)
     public ?int $filterMonth = null;
     public ?int $filterYear = null;
 
@@ -18,6 +18,15 @@ class ListCotizacions extends ListRecords
     {
         return [
             CotizacionesStats::class,
+        ];
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make()
+                ->label('Nueva Cotización')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

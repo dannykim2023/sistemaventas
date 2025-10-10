@@ -20,14 +20,60 @@ class CotizacionForm
                 ->label('Cliente')
                 ->relationship('cliente', 'nombre')
                 ->searchable()
+                // Código actual
                 ->createOptionForm([
-                    TextInput::make('nombre')
+                    
+                    // Fila 1: Tipo y Número de Documento (2 columnas)
+                    Select::make('tipo_cliente')
+                        ->label('Tipo de documento')
+                        ->options(['persona' => 'DNI', 'empresa' => 'RUC'])
                         ->required()
-                        ->label('Nombre del Cliente'),
+                        ->reactive()
+                        ->afterStateUpdated(fn ($state, callable $set) => $set('ruc_dni', ''))
+                        ->columnSpan(1), // Ocupa una columna
+
+                    TextInput::make('ruc_dni')
+                        ->label('Número de documento')
+                        ->required()
+                        ->reactive()
+                        ->rule(function (callable $get) {
+                            return function ($attribute, $value, $fail) use ($get) {
+                                $tipo = $get('tipo_cliente');
+                                if ($tipo === 'dni' && !preg_match('/^\d{8}$/', $value)) {
+                                    $fail('El DNI debe tener 8 dígitos.');
+                                }
+                                if ($tipo === 'ruc' && !preg_match('/^\d{11}$/', $value)) {
+                                    $fail('El RUC debe tener 11 dígitos.');
+                                }
+                            };
+                        })
+                        ->columnSpan(1), // Ocupa una columna
+                    
+                    // Fila 2: Nombre o Razón Social (Ancho completo)
+                    TextInput::make('nombre')
+                        ->label('Nombre / Razón Social')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    // Fila 3: Teléfono y Email (2 columnas)
+                    TextInput::make('telefono')
+                        ->label('Teléfono')
+                        ->tel()
+                        ->required()
+                        ->columnSpan(1),
+
                     TextInput::make('email')
+                        ->label('Correo electrónico')
                         ->email()
-                        ->label('Correo'),
+                        ->required()
+                        ->columnSpan(1),
+
+                    // Fila 4: Dirección (Ancho completo)
+                    TextInput::make('direccion')
+                        ->label('Dirección')
+                        ->columnSpanFull(),
                 ])
+                ->columns(2) // ⬅️ Aplica el layout de 2 columnas al modal del createOptionForm
                 ->required(),
 
             Hidden::make('fecha')
@@ -97,7 +143,20 @@ class CotizacionForm
                 ->minValue(0)
                 ->reactive()
                 ->afterStateUpdated(fn($state, callable $set, $get) => self::recalcularTotales($set, $get)),
-
+            
+            // --- CAMPO AÑADIDO: ESTADO ---
+            Select::make('estado')
+                ->label('Estado de la Cotización')
+                ->options([
+                    'en espera' => 'En Espera',
+                    'enviada' => 'Enviada',
+                    'aceptada' => 'Aceptada',
+                    'rechazada' => 'Rechazada',
+                    'cancelada' => 'Cancelada', // Si añades 'cancelada' a tu ENUM
+                ])
+                ->default('enviada') // <-- Por defecto en 'enviada' según tu solicitud
+                ->required(),
+            
             // Totales
             Placeholder::make('total_sin_igv_display')
                 ->label('Subtotal (sin IGV)')

@@ -6,20 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->id();
+            $table->string('titulo');
+            $table->text('descripcion')->nullable();
+            $table->enum('tipo', ['producto', 'servicio'])->default('servicio');
+            $table->decimal('precio_costo', 10, 2)->default(0);
+            $table->decimal('precio_venta', 10, 2)->default(0);
+            $table->decimal('margen', 10, 2)->virtualAs('precio_venta - precio_costo');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('productos');
