@@ -37,16 +37,14 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
-            ->pages([
-                Dashboard::class,
+             ->pages([
+                \App\Filament\Pages\CustomDashboard::class, // <-- AHORA USA TU PÁGINA
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
-                VentasOverview::class,      // Primero: 4 Cards
-                IngresosPagadosChart::class, // Segundo: Gráfico de Analítica
-                UltimosPagosTable::class,   // Tercero: Tabla de Pagos
+        
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -22,7 +22,7 @@ class PagoResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'pago';
+    protected static ?string $recordTitleAttribute = 'monto';
 
     public static function getNavigationLabel(): string
     {

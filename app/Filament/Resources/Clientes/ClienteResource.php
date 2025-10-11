@@ -18,6 +18,8 @@ class ClienteResource extends Resource
 {
     protected static ?string $model = Cliente::class;
 
+    protected static ?string $recordTitleAttribute = 'nombre';
+
     public static function getNavigationIcon(): string|BackedEnum|null
     {
         return 'heroicon-o-users';

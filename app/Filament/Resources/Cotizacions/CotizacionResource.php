@@ -20,8 +20,14 @@ class CotizacionResource extends Resource
     protected static ?string $model = Cotizacion::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static ?string $recordTitleAttribute = 'cotizaciones';
+    
+    protected static ?string $recordTitleAttribute = 'fecha'; 
+    
+    public static function shouldReceiveGlobalSearchResult(): bool
+    {
+        // 👈 Devolver 'false' desactiva la búsqueda global para este recurso.
+        return false;   
+    }
     public static function getNavigationIcon(): string|BackedEnum|null
     {
         return 'heroicon-o-document-text';

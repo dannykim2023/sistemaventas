@@ -18,6 +18,7 @@ class ProductoResource extends Resource
 {
     protected static ?string $model = Producto::class;
 
+    protected static ?string $recordTitleAttribute = 'titulo';
 
     public static function getNavigationLabel(): string
     {

@@ -22,7 +22,7 @@ class VentaResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'venta';
+    protected static ?string $recordTitleAttribute = 'fecha';
 
      public static function getNavigationIcon(): string|BackedEnum|null
     {
