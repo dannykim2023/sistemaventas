@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Cliente;
 use App\Models\Cotizacion;
 use App\Models\Venta;
+use App\Models\Pago; 
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -24,13 +25,12 @@ class VentasOverview extends BaseWidget
         // 2. Ventas Realizadas (Este mes)
         $ventasRealizadas = Venta::whereMonth('created_at', $currentMonth)->count();
         
-        // 3. Monto Cotizaciones Enviadas (Total)
-        // CORREGIDO: Usamos 'total_con_igv' que es la columna real en cotizaciones 
-        $montoCotizaciones = Cotizacion::where('estado', '=', 'enviada')->sum('total_con_igv'); 
+        // 3. total pagos (Total)
+        $totalPagos = Pago::whereMonth('fecha_pago', $currentMonth)->sum('monto');
 
         // 4. Saldo por Cobrar
         // CORREGIDO: Usamos 'total' que es la columna real en ventas 
-        $saldoPorCobrar = Venta::where('estado', '=', 'en curso')->sum('total');
+        $saldoPorCobrar = Venta::where('estado', '=', 'en curso')->sum('saldo');
         
         return [
             Stat::make('Clientes Nuevos', $clientesNuevos)
@@ -43,8 +43,8 @@ class VentasOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('success'),
 
-            Stat::make('Monto Cotizaciones Enviadas', 'S/ ' . number_format($montoCotizaciones, 2))
-                ->description('Total en cotizaciones pendientes')
+            Stat::make('Monto Pagos recibidos', 'S/ ' . number_format($totalPagos, 2))
+                ->description('Total pagos recibidos este mes')
                 ->descriptionIcon('heroicon-m-document-text')
                 ->color('warning'),
 
