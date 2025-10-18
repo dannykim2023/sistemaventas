@@ -30,7 +30,7 @@ class VentasOverview extends BaseWidget
 
         // 4. Saldo por Cobrar
         // CORREGIDO: Usamos 'total' que es la columna real en ventas 
-        $saldoPorCobrar = Venta::where('estado', '=', 'pendiente')->sum('total');
+        $saldoPorCobrar = Venta::where('estado', '=', 'en curso')->sum('total');
         
         return [
             Stat::make('Clientes Nuevos', $clientesNuevos)
