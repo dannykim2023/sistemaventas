@@ -1,208 +1,273 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Cotización #{{ $cotizacion->id }}</title>
-        <style>
-            @page {
-                size: A4;
-                margin: 20mm;
-            }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cotización</title>
+  <style>
+    /* ===== Tamaño A4 y tipografía ===== */
+    @page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+    * { box-sizing: border-box; }
+    html, body { font-family: DejaVu Sans, Arial, sans-serif; color:#1a1a1a; }
+    body { font-size: 12px; line-height: 1.45; background: #fff; }
 
-            body {
-                font-family: DejaVu Sans, sans-serif;
-                font-size: 12px;
-                color: #333;
-                margin: 0;
-                padding: 0;
-            }
+    /* ===== Utilitarios ===== */
+    .brand   { color:#0A3CC2; }      /* azul principal */
+    .muted   { color:#6b7280; }
+    .small   { font-size: 11px; }
+    .xsmall  { font-size: 10px; }
+    .strong  { font-weight: 700; }
 
-            .header {
-                background: #0056d6;
-                color: #fff;
-                padding: 20px;
-            }
+    /* ===== Header ===== */
+    .header {
+      width: 100%;
+      border-bottom: 2px solid #0A3CC2;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+    }
+    .header td { vertical-align: middle; }
+    .logo { width: 70px; border-radius: 6px; }
+    .title {
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 800;
+      text-align: right;
+      color:#0A3CC2;
+    }
 
-            .header .logo {
-                width: 120px;
-                margin-bottom: 10px;
-            }
+    /* ===== Bloque de datos ===== */
+    .info { width: 100%; margin-top: 4px; margin-bottom: 12px; }
+    .info td { vertical-align: top; padding: 2px 0; }
 
-            .header h1 {
-                margin: 0;
-                font-size: 20px;
-                text-transform: uppercase;
-            }
+    /* ===== Tabla ===== */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+    .thead {
+      background: #123F91; /* azul oscuro de cabecera */
+      color: #ffffff;
+    }
+    .thead th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    .tbody td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+    .num { text-align: right; white-space: nowrap; }
 
-            .company-info {
-                font-size: 11px;
-                line-height: 1.4;
-            }
+    /* ===== Totales ===== */
+    .totals { width: 100%; margin-top: 6px; }
+    .totals td { padding: 5px 8px; }
+    .totals .label { text-align: right; font-weight: 700; }
+    .totals .val   { text-align: right; }
+    .total-box {
+      background: #123F91;
+      color:#fff;
+      font-weight: 800;
+      padding: 10px 12px;
+      border-radius: 6px;
+      display: inline-block;
+      min-width: 120px;
+      text-align: right;
+    }
 
-            .cotizacion-info {
-                text-align: right;
-                font-size: 11px;
-            }
+    /* ===== Nota y firma ===== */
+    .note {
+      border: 1px dashed #cbd5e1;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: #f8fafc;
+      margin-top: 8px;
+    }
+    .signature { margin-top: 28px; text-align: right; }
+    .signature img { height: 38px; }
 
-            .content {
-                padding: 20px;
-            }
+    /* ===== Footer ===== */
+    .footer {
+      border-top: 2px solid #0A3CC2;
+      margin-top: 14px;
+      padding-top: 8px;
+      display: table;
+      width: 100%;
+    }
+    .col {
+      display: table-cell;
+      width: 50%;
+      vertical-align: top;
+      padding-right: 10px;
+    }
+    .badge {
+      display: inline-block;
+      background:#0A3CC2;
+      color:#fff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+    }
 
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 15px;
-            }
+    /* ===== Ajustes print opcionales ===== */
+    @media print {
+      .page-break { page-break-after: always; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
 
-            th {
-                background: #0056d6;
-                color: #fff;
-                padding: 8px;
-                text-align: left;
-                font-size: 12px;
-            }
+  <!-- ===== HEADER ===== -->
+  <table class="header" cellpadding="0" cellspacing="0">
+    <tr>
+      <td>
+        <!-- Logo de muestra (reemplaza por el tuyo). 
+             Para Dompdf: habilita enable_remote o usa ruta local/public_path -->
+        <img class="logo" src="https://via.placeholder.com/140x80?text=LOGO" alt="Logo">
+      </td>
+      <td>
+        <div class="title">COTIZACIÓN</div>
+      </td>
+    </tr>
+  </table>
 
-            td {
-                padding: 8px;
-                border-bottom: 1px solid #ddd;
-            }
-
-            td strong {
-                color: #000;
-            }
-
-            .totales {
-                margin-top: 10px;
-                width: 100%;
-                font-size: 12px;
-            }
-
-            .totales td {
-                padding: 6px;
-            }
-
-            .totales .label {
-                text-align: right;
-                font-weight: bold;
-            }
-
-            .totales .valor {
-                text-align: right;
-            }
-
-            .footer {
-                margin-top: 20px;
-                font-size: 11px;
-            }
-
-            .footer strong {
-                color: #000;
-            }
-
-            .firmas {
-                margin-top: 40px;
-                text-align: right;
-                font-size: 12px;
-            }
-
-            .firmas .nombre {
-                font-weight: bold;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <img
-                src="{{ public_path('imagenes/logoagenciadn.png') }}"
-                class="logo"
-                alt="Logo"
-            />
-            <h1>Cotización</h1>
-            <div style="display: flex; justify-content: space-between">
-                <div class="company-info">
-                    <strong>AGENCIA DN - SOFTWARE & MARKETING S.A.C.</strong
-                    ><br />
-                    RUC: 20614216493<br />
-                    Dirección: Calle Robinson 113 – Surquillo – Lima
-                </div>
-                <div class="cotizacion-info">
-                    <strong>Cotización N°:</strong> #{{ $cotizacion->id }}<br />
-                    <strong>F. Emisión:</strong> {{ $cotizacion->fecha_emision
-                    ?? '-' }}<br />
-                    <strong>F. Vencimiento:</strong> {{
-                    $cotizacion->fecha_vencimiento ?? '-' }}
-                </div>
-            </div>
+  <!-- ===== INFO ===== -->
+  <table class="info" cellpadding="0" cellspacing="0">
+    <tr>
+      <td style="width:50%; padding-right:10px;">
+        <div class="strong">Dirección de la Oficina</div>
+        <div class="xsmall muted">
+          hola@clinicaejemplo.com<br>
+          (01) 234-5678<br>
+          Calle Cualquiera 123, Ciudad
         </div>
-
-        <div class="content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th>Cantidad</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cotizacion->items as $item)
-                    <tr>
-                        <td><strong>{{ $item->descripcion }}</strong></td>
-                        <td>{{ $item->cantidad }}</td>
-                        <td>
-                            <strong
-                                >S/ {{ number_format($item->subtotal, 2)
-                                }}</strong
-                            >
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <table class="totales">
-                <tr>
-                    <td class="label">Sub-total:</td>
-                    <td class="valor">
-                        S/ {{ number_format($cotizacion->subtotal, 2) }}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">Descuento:</td>
-                    <td class="valor">-</td>
-                </tr>
-                <tr>
-                    <td class="label">IGV (18%):</td>
-                    <td class="valor">-</td>
-                </tr>
-                <tr>
-                    <td class="label"><strong>Total:</strong></td>
-                    <td class="valor">
-                        <strong
-                            >S/ {{ number_format($cotizacion->total, 2)
-                            }}</strong
-                        >
-                    </td>
-                </tr>
-            </table>
-
-            <div class="footer">
-                <p>
-                    <strong>Detalles adicionales:</strong><br />
-                    El proyecto inicia con un pago del 30% del total acordado.
-                    El saldo restante debe ser cancelado antes de migrar la
-                    página web al dominio principal del cliente.<br />
-                    Una vez entregado el diseño inicial, el cliente podrá
-                    solicitar cambios mínimos dentro de un plazo de 7 días
-                    hábiles después de completar el proyecto.<br />
-                    Renovación anual: S/300 (Dominio + Hosting si aplica).
-                </p>
-            </div>
-
-            <div class="firmas">
-                <div class="nombre">Lorenzo Daniel Sancho Osco</div>
-                CEO | Gerente General
-            </div>
+      </td>
+      <td style="width:50%;">
+        <div class="strong">Para:</div>
+        <div class="xsmall muted">
+          Ana Luz Tacora<br>
+          ana@cliente.com<br>
+          Av. Siempre Viva 742
         </div>
-    </body>
+      </td>
+    </tr>
+    <tr>
+      <td class="xsmall muted" style="padding-top:6px;">
+        <span class="strong">N° Cotización:</span> CTZ-0001<br>
+        <span class="strong">Fecha:</span> 25/10/2025
+      </td>
+      <td class="xsmall muted" style="padding-top:6px;">
+        <span class="strong">Validez:</span> 7 días<br>
+        <span class="strong">Moneda:</span> USD
+      </td>
+    </tr>
+  </table>
+
+  <!-- ===== TABLA DE ÍTEMS ===== -->
+  <table class="table" cellpadding="0" cellspacing="0">
+    <tr class="thead">
+      <th style="width:50%;">Descripción del artículo</th>
+      <th style="width:15%;">Precio</th>
+      <th style="width:15%;">Cantidad</th>
+      <th style="width:20%;">Total</th>
+    </tr>
+
+    <tr class="tbody">
+      <td>
+        <div class="strong">ARTÍCULO 1</div>
+        <div class="xsmall muted">Breve descripción del producto o servicio.</div>
+      </td>
+      <td class="num">$ 100.00</td>
+      <td class="num">2</td>
+      <td class="num">$ 200.00</td>
+    </tr>
+    <tr class="tbody">
+      <td>
+        <div class="strong">ARTÍCULO 2</div>
+        <div class="xsmall muted">Detalle adicional del ítem.</div>
+      </td>
+      <td class="num">$ 100.00</td>
+      <td class="num">1</td>
+      <td class="num">$ 100.00</td>
+    </tr>
+    <tr class="tbody">
+      <td>
+        <div class="strong">ARTÍCULO 3</div>
+        <div class="xsmall muted">Otra descripción.</div>
+      </td>
+      <td class="num">$ 100.00</td>
+      <td class="num">1</td>
+      <td class="num">$ 100.00</td>
+    </tr>
+    <tr class="tbody">
+      <td>
+        <div class="strong">ARTÍCULO 4</div>
+        <div class="xsmall muted">Notas del servicio.</div>
+      </td>
+      <td class="num">$ 100.00</td>
+      <td class="num">1</td>
+      <td class="num">$ 100.00</td>
+    </tr>
+  </table>
+
+  <!-- ===== TOTALES ===== -->
+  <table class="totals" cellpadding="0" cellspacing="0">
+    <tr>
+      <td style="width:60%; vertical-align:top;">
+        <div class="note xsmall">
+          <span class="strong">Nota:</span>
+          “Los Términos y Condiciones” regulan la relación contractual entre el proveedor del servicio y su usuario.
+        </div>
+      </td>
+      <td style="width:20%;" class="label xsmall">SUB TOTAL:</td>
+      <td style="width:20%;" class="val xsmall">$ 500.00</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="label xsmall">IMPUESTO:</td>
+      <td class="val xsmall">$ 0.00</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td class="label xsmall">TOTAL:</td>
+      <td class="val">
+        <div class="total-box">$ 500.00</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ===== FIRMA ===== -->
+  <div class="signature">
+    <img src="https://via.placeholder.com/200x50?text=FIRMA" alt="Firma"><br>
+    <div class="strong">Ricardo Sanchez</div>
+    <div class="xsmall muted">Doctor</div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer">
+    <div class="col xsmall">
+      <div class="badge">¿Preguntas?</div>
+      <div style="margin-top:6px;">
+        Llámanos: +51 929 957 664<br>
+        Escríbenos: hola@empresa.com
+      </div>
+    </div>
+    <div class="col xsmall">
+      <div class="badge">Términos y Condiciones</div>
+      <div style="margin-top:6px;">
+        Los “Términos y Condiciones” son el documento que regula la relación contractual
+        entre el proveedor de un servicio y su usuario.
+      </div>
+    </div>
+  </div>
+
+</body>
 </html>

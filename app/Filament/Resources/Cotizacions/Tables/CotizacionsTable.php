@@ -16,6 +16,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use App\Models\Cotizacion;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 
 class CotizacionsTable
 {
@@ -182,19 +183,17 @@ class CotizacionsTable
 
                 // 👇 Acción personalizada: Descargar PDF
                 Action::make('pdf')
-                    ->label('PDF')
+                    ->label('Generar PDF')
                     ->icon('heroicon-o-document-text')
                     ->color('success')
-                    ->action(function ($record) {
-                        $pdf = Pdf::loadView('pdf.cotizacion', [
-                            'cotizacion' => $record,
-                        ]);
-
-                        return response()->streamDownload(
-                            fn () => print($pdf->output()),
-                            "cotizacion-{$record->id}.pdf"
-                        );
-                    }),
+                    ->url(fn (Cotizacion $record) =>
+                        URL::temporarySignedRoute(
+                            'cotizaciones.preview',
+                            now()->addMinutes(5),      // URL válida por 5 min
+                            ['cotizacion' => $record->getKey()]
+                        )
+                    )
+                    ->openUrlInNewTab(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

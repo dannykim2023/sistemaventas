@@ -14,6 +14,15 @@ return [
     |
     */
 
+    // API SUNAR CONEXION
+
+    'apiperu' => [
+        'base_url' => env('API_PERU_BASE_URL', 'https://apiperu.dev/api'),
+        'token'    => env('API_PERU_TOKEN'),
+        'timeout'  => env('API_PERU_TIMEOUT', 8),
+    ],
+
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
